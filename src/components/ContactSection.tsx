@@ -63,7 +63,7 @@ const ContactSection = () => {
                 </div>
                 <div className="flex items-center gap-2 text-muted-foreground">
                   <MapPin className="w-4 h-4 text-neon-cyan" />
-                  <span>San Francisco, CA (Remote OK)</span>
+                  <span>Colombo, Sri Lanka (Remote OK)</span>
                 </div>
                 <div className="flex items-center gap-2 text-muted-foreground">
                   <Clock className="w-4 h-4 text-neon-cyan" />
