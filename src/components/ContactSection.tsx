@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { Send, Terminal, MapPin, Clock } from 'lucide-react';
 import { useState } from 'react';
+import emailjs from '@emailjs/browser';
 
 const ContactSection = () => {
   const [formState, setFormState] = useState({
@@ -8,11 +9,33 @@ const ContactSection = () => {
     email: '',
     message: '',
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitMessage, setSubmitMessage] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Form handling would go here
-    console.log('Form submitted:', formState);
+    setIsSubmitting(true);
+    setSubmitMessage('');
+
+    try {
+      await emailjs.send(
+        'service_s85i0t5', // Replace with your EmailJS service ID
+        'template_po9y1hj', // Replace with your EmailJS template ID
+        {
+          from_name: formState.name,
+          from_email: formState.email,
+          message: formState.message,
+        },
+        'QR0wjsSeLMZsBlrJE' // Replace with your EmailJS public key
+      );
+      setSubmitMessage('Transmission sent successfully!');
+      setFormState({ name: '', email: '', message: '' });
+    } catch (error) {
+      console.error('Email send error:', error);
+      setSubmitMessage('Failed to send transmission. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -141,11 +164,17 @@ const ContactSection = () => {
 
               <button
                 type="submit"
-                className="w-full glass-panel py-4 rounded-lg font-display text-sm tracking-wider text-foreground hover:text-neon-cyan hover:border-neon-cyan/50 hover:shadow-[0_0_30px_hsl(187_100%_50%/0.3)] transition-all duration-500 flex items-center justify-center gap-2 group"
+                disabled={isSubmitting}
+                className="w-full glass-panel py-4 rounded-lg font-display text-sm tracking-wider text-foreground hover:text-neon-cyan hover:border-neon-cyan/50 hover:shadow-[0_0_30px_hsl(187_100%_50%/0.3)] transition-all duration-500 flex items-center justify-center gap-2 group disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <span>TRANSMIT</span>
-                <Send className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                <span>{isSubmitting ? 'TRANSMITTING...' : 'TRANSMIT'}</span>
+                <Send className={`w-4 h-4 ${isSubmitting ? 'animate-pulse' : 'group-hover:translate-x-1'} transition-transform`} />
               </button>
+              {submitMessage && (
+                <p className={`text-sm text-center ${submitMessage.includes('successfully') ? 'text-green-400' : 'text-red-400'}`}>
+                  {submitMessage}
+                </p>
+              )}
             </form>
           </motion.div>
         </div>
