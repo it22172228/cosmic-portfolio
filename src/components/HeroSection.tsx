@@ -40,7 +40,7 @@ const HeroSection = () => {
   }, []);
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden px-4 md:px-6">
       {/* Central Sun Glow */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
         <div className="w-[600px] h-[600px] rounded-full bg-gradient-radial from-neon-cyan/20 via-neon-cyan/5 to-transparent blur-3xl animate-pulse-glow" />
@@ -86,7 +86,7 @@ const HeroSection = () => {
           </p>
 
           {/* Social Links */}
-          <div className="flex items-center justify-center gap-4 mb-12">
+          <div className="flex items-center justify-center gap-3 md:gap-4 mb-12">
             {[
               { icon: Github, href: 'https://github.com/it22172228', label: 'GitHub' },
               { icon: Linkedin, href: 'https://www.linkedin.com/in/chanith-tranchal/', label: 'LinkedIn' },

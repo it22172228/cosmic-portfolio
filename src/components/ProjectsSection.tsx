@@ -137,7 +137,7 @@ const ProjectsSection = () => {
   const [viewMode, setViewMode] = useState<'solar' | 'grid'>('solar');
 
   return (
-    <section id="projects" className="relative py-32 px-6">
+    <section id="projects" className="relative py-20 md:py-32 px-4 md:px-6">
       {/* Section Header */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -199,7 +199,7 @@ const ProjectsSection = () => {
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-16 place-items-center"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12 lg:gap-16 place-items-center"
           >
             {projects.map((project, index) => (
               <ProjectPlanet

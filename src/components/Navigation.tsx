@@ -30,7 +30,7 @@ const Navigation = () => {
         isScrolled ? 'glass-panel border-b border-neon-cyan/10' : ''
       }`}
     >
-      <nav className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <nav className="max-w-7xl mx-auto px-4 md:px-6 py-4 flex items-center justify-between">
         {/* Logo */}
         <a href="#" className="font-display text-xl font-bold text-foreground hover:text-neon-cyan transition-colors">
           <span className="text-neon-cyan">&lt;</span>
@@ -76,7 +76,7 @@ const Navigation = () => {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
-          className="md:hidden glass-panel border-t border-neon-cyan/10 px-6 py-8"
+          className="md:hidden glass-panel border-t border-neon-cyan/10 px-4 md:px-6 py-6 md:py-8"
         >
           <div className="flex flex-col gap-6">
             {navItems.map((item) => (

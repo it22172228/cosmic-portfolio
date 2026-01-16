@@ -286,7 +286,7 @@ const OrbitingPlanet = ({
 };
 
 // Central sun
-const CentralSun = () => {
+const CentralSun = ({ onClick }: { onClick: () => void }) => {
   const sunRef = useRef<THREE.Mesh>(null);
   const coronaRef = useRef<THREE.Mesh>(null);
 
@@ -315,7 +315,7 @@ const CentralSun = () => {
       </mesh>
 
       {/* Main sun */}
-      <mesh ref={sunRef}>
+      <mesh ref={sunRef} onClick={onClick} onPointerOver={() => document.body.style.cursor = 'pointer'} onPointerOut={() => document.body.style.cursor = 'auto'}>
         <Sphere args={[1, 64, 64]}>
           <MeshDistortMaterial
             color="#ffd700"
@@ -379,11 +379,13 @@ const CameraController = ({
 const SolarSystemScene = ({ 
   projects, 
   onPlanetClick,
-  selectedProject 
+  selectedProject,
+  onSunClick
 }: { 
   projects: ProjectData[];
   onPlanetClick: (project: ProjectData | null) => void;
   selectedProject: ProjectData | null;
+  onSunClick: () => void;
 }) => {
   const [zoomTarget, setZoomTarget] = useState<THREE.Vector3 | null>(null);
 
@@ -412,7 +414,7 @@ const SolarSystemScene = ({
       <Stars radius={50} depth={50} count={3000} factor={3} saturation={0.5} fade speed={0.5} />
       
       {/* Central sun */}
-      <CentralSun />
+      <CentralSun onClick={onSunClick} />
       
       {/* Orbital paths */}
       <OrbitalPaths projects={projects} />
@@ -450,7 +452,7 @@ const ProjectDetailModal = ({
         animate={{ scale: 1, y: 0 }}
         exit={{ scale: 0.8, y: 50 }}
         transition={{ type: "spring", stiffness: 300, damping: 30 }}
-        className="glass-panel hud-border rounded-2xl max-w-2xl w-full max-h-[80vh] overflow-auto pointer-events-auto"
+        className="glass-panel hud-border rounded-2xl max-w-2xl w-full max-h-[80vh] overflow-auto pointer-events-auto mx-4"
         style={{ 
           boxShadow: `0 0 60px ${project.color}30, 0 0 120px ${project.color}15`,
         }}
@@ -589,6 +591,78 @@ const ProjectDetailModal = ({
   );
 };
 
+// CV modal
+const CVModal = ({ onClose }: { onClose: () => void }) => {
+  const handleDownload = () => {
+    const link = document.createElement('a');
+    link.href = '/Chanith Tranchal.pdf'; // Assuming CV is in public folder as cv.pdf
+    link.download = 'Chanith Tranchal.pdf';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="absolute inset-0 z-20 flex items-center justify-center p-4 pointer-events-none"
+    >
+      <motion.div
+        initial={{ scale: 0.8, y: 50 }}
+        animate={{ scale: 1, y: 0 }}
+        exit={{ scale: 0.8, y: 50 }}
+        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+        className="glass-panel hud-border rounded-2xl max-w-2xl w-full max-h-[80vh] overflow-auto pointer-events-auto mx-4"
+        style={{ 
+          boxShadow: `0 0 60px #ffd70030, 0 0 120px #ffd70015`,
+        }}
+      >
+        {/* Header */}
+        <div className="relative p-6 border-b border-white/10">
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 p-2 rounded-full glass-panel hover:bg-white/10 transition-colors"
+          >
+            <X className="w-5 h-5 text-muted-foreground" />
+          </button>
+          
+          <div className="flex items-center gap-3 mb-2">
+            <div 
+              className="w-4 h-4 rounded-full animate-pulse"
+              style={{ backgroundColor: '#ffd700', boxShadow: `0 0 20px #ffd700` }}
+            />
+            <span className="font-mono-light text-sm text-muted-foreground tracking-wider">PERSONAL MISSION</span>
+          </div>
+          
+          <h2 className="font-display text-3xl text-foreground" style={{ textShadow: `0 0 30px #ffd700` }}>
+            Curriculum Vitae
+          </h2>
+        </div>
+
+        {/* Content */}
+        <div className="p-6 space-y-6">
+          <p className="text-muted-foreground leading-relaxed">
+            Download my CV to learn more about my professional background, skills, and experience.
+          </p>
+
+          {/* Download Button */}
+          <div className="flex justify-center pt-4">
+            <button
+              onClick={handleDownload}
+              className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 rounded-lg transition-all duration-300 font-mono-light text-sm text-white shadow-lg hover:shadow-xl transform hover:scale-105"
+            >
+              <ExternalLink className="w-4 h-4" />
+              Download CV
+            </button>
+          </div>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+};
+
 // Main exported component
 interface SolarSystem3DProps {
   projects: ProjectData[];
@@ -596,9 +670,10 @@ interface SolarSystem3DProps {
 
 const SolarSystem3D = ({ projects }: SolarSystem3DProps) => {
   const [selectedProject, setSelectedProject] = useState<ProjectData | null>(null);
+  const [showCVModal, setShowCVModal] = useState(false);
 
   return (
-    <div className="relative w-full h-[700px]">
+    <div className="relative w-full h-[500px] md:h-[600px] lg:h-[700px]">
       <Canvas
         camera={{ position: [0, 8, 12], fov: 60 }}
         style={{ background: 'transparent' }}
@@ -608,6 +683,7 @@ const SolarSystem3D = ({ projects }: SolarSystem3DProps) => {
           projects={projects}
           onPlanetClick={setSelectedProject}
           selectedProject={selectedProject}
+          onSunClick={() => setShowCVModal(true)}
         />
       </Canvas>
 
@@ -621,10 +697,20 @@ const SolarSystem3D = ({ projects }: SolarSystem3DProps) => {
         )}
       </AnimatePresence>
 
+      {/* CV modal */}
+      <AnimatePresence>
+        {showCVModal && (
+          <CVModal onClose={() => setShowCVModal(false)} />
+        )}
+      </AnimatePresence>
+
       {/* Instructions */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 glass-panel px-4 py-2 rounded-full">
-        <span className="font-mono-light text-xs text-muted-foreground">
+      <div className="absolute bottom-2 md:bottom-4 left-1/2 -translate-x-1/2 glass-panel px-3 md:px-4 py-1.5 md:py-2 rounded-full">
+        <span className="font-mono-light text-xs text-muted-foreground hidden sm:inline">
           Click on a planet to explore • Drag to rotate view
+        </span>
+        <span className="font-mono-light text-xs text-muted-foreground sm:hidden">
+          Tap planets • Drag to rotate
         </span>
       </div>
     </div>

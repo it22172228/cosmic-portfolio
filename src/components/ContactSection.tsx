@@ -39,7 +39,7 @@ const ContactSection = () => {
   };
 
   return (
-    <section className="relative py-32 px-6">
+    <section className="relative py-20 md:py-32 px-4 md:px-6">
       {/* Background glow */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-gradient-radial from-neon-cyan/10 via-transparent to-transparent blur-2xl" />
@@ -65,7 +65,7 @@ const ContactSection = () => {
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 gap-12">
+        <div className="grid md:grid-cols-2 gap-8 md:gap-12">
           {/* Info Panel */}
           <motion.div
             initial={{ opacity: 0, x: -40 }}

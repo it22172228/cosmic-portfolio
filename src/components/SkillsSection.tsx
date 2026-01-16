@@ -50,7 +50,7 @@ const constellations = [
 
 const SkillsSection = () => {
   return (
-    <section className="relative py-32 px-6">
+    <section className="relative py-20 md:py-32 px-4 md:px-6">
       {/* Background accent */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-neon-cyan/5 rounded-full blur-[100px]" />
@@ -77,7 +77,7 @@ const SkillsSection = () => {
       </motion.div>
 
       {/* Constellations Grid */}
-      <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
+      <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 relative z-10">
         {constellations.map((constellation, index) => (
           <SkillConstellation
             key={constellation.name}
